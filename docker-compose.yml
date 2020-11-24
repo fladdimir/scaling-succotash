@@ -1,0 +1,7 @@
+version: "3"
+
+services:
+  derby:
+    image: az82/docker-derby
+    ports:
+      - 1527:1527
