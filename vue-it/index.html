@@ -14,13 +14,12 @@
 </head>
 
 <body>
-    <div id="app">
+    <div id="app" style="align-items: center; display: flex; justify-content: center; margin-top: 10%;">
         <color-picker v-bind="color" @input="onInput"></color-picker>
     </div>
 
     <script>
         var ColorPicker = window.VueColorPicker;
-
         var app = new Vue({
             el: '#app',
             components: {
