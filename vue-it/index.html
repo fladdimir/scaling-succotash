@@ -3,63 +3,13 @@
 
 <head>
     <meta charset="utf-8" />
-    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-    <script src="https://unpkg.com/@radial-color-picker/vue-color-picker/dist/vue-color-picker.umd.min.js"></script>
-    <link href="https://unpkg.com/@radial-color-picker/vue-color-picker/dist/vue-color-picker.min.css" rel="stylesheet">
-
+    <script src="vue.js"></script>
+    <script src="color-picker.js"></script>
+    <link href="color-picker.css" rel="stylesheet">
+    <script src="color-conversion.js"></script>
     <script>
-        function calc(h, s, l) {
-            h = parseFloat(h);
-            s = parseFloat(s);
-            l = parseFloat(l);
-            if (h < 0) h = 0;
-            if (s < 0) s = 0;
-            if (l < 0) l = 0;
-            if (h >= 360) h = 359;
-            if (s > 100) s = 100;
-            if (l > 100) l = 100;
-            s /= 100;
-            l /= 100;
-            C = (1 - Math.abs(2 * l - 1)) * s;
-            hh = h / 60;
-            X = C * (1 - Math.abs(hh % 2 - 1));
-            r = g = b = 0;
-            if (hh >= 0 && hh < 1) {
-                r = C;
-                g = X;
-            }
-            else if (hh >= 1 && hh < 2) {
-                r = X;
-                g = C;
-            }
-            else if (hh >= 2 && hh < 3) {
-                g = C;
-                b = X;
-            }
-            else if (hh >= 3 && hh < 4) {
-                g = X;
-                b = C;
-            }
-            else if (hh >= 4 && hh < 5) {
-                r = X;
-                b = C;
-            }
-            else {
-                r = C;
-                b = X;
-            }
-            m = l - C / 2;
-            r += m;
-            g += m;
-            b += m;
-            r *= 255.0;
-            g *= 255.0;
-            b *= 255.0;
-            r = Math.round(r);
-            g = Math.round(g);
-            b = Math.round(b);
-            return [r, g, b];
-        }
+        const COLOR_URL = "http://localhost:8080/rgbColors/1";
+        const MAX_COLOR_VALUE = 255;
     </script>
 </head>
 
@@ -87,19 +37,33 @@
             methods: {
                 onInput: function (hue) {
                     this.color.hue = hue;
-                    const [r, g, b] = calc(hue, this.color.saturation, this.color.luminosity);
+                    const [r, g, b] = toRgb(hue, this.color.saturation, this.color.luminosity);
 
                     const data = JSON.stringify({
-                        r, g, b
+                        r, g, b,
+                        max: MAX_COLOR_VALUE
                     });
                     console.log(data);
-
-                    const url = "http://localhost:8080/rgbColors/1";
-                    var xhr = new XMLHttpRequest();
-                    xhr.open("PUT", url, true);
+                    const xhr = new XMLHttpRequest();
+                    xhr.open("PUT", COLOR_URL, true);
                     xhr.setRequestHeader('Content-Type', 'application/json');
                     xhr.send(data);
-                }
+                },
+            },
+            created: function () {
+                // fetch from db
+                console.log("fetching current value from db...")
+                fetch(COLOR_URL)
+                    .then(response => response.json())
+                    .then(rgbColor => {
+                        console.log(`fetched from db:\n${JSON.stringify(rgbColor, null, 2)}`)
+                        var rgb = [rgbColor.r, rgbColor.g, rgbColor.b];
+                        rgb = rgb.map(colorValue => colorValue / rgbColor.max * MAX_COLOR_VALUE);
+                        [h, s, l] = toHsl(...rgb);
+                        this.color.hue = h;
+                        this.color.saturation = s;
+                        this.color.luminosity = l;
+                    });
             }
         });
     </script>
