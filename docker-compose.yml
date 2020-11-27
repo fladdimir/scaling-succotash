@@ -1,7 +1,11 @@
 version: "3"
 
 services:
-  derby:
-    image: az82/docker-derby
+  postgres:
+    image: postgres
     ports:
-      - 1527:1527
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
