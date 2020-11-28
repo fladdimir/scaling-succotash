@@ -58,7 +58,8 @@
                         console.log(`fetched from db:\n${JSON.stringify(rgbColor, null, 2)}`)
                         var rgb = [rgbColor.r, rgbColor.g, rgbColor.b];
                         rgb = rgb.map(colorValue => colorValue / rgbColor.max * MAX_COLOR_VALUE);
-                        [h, s, l] = toHsl(...rgb);
+                        console.log(`scaled rgb: ${rgb}`)
+                        const [h, s, l] = toHsl(...rgb);
                         this.color.hue = h;
                         this.color.saturation = s;
                         this.color.luminosity = l;

@@ -15,8 +15,8 @@ public class RgbColor {
     private long id;
 
     private int r = 0;
-    private int b = 0;
     private int g = 0;
+    private int b = 0;
     private int max = 255;
 
     public RgbColor(long id, int r, int b, int g, int max) {
