@@ -1,0 +1,6 @@
+version: "3"
+
+services:
+  succotash-graal-native:
+    image: succotash
+    network_mode: host
