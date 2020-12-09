@@ -15,7 +15,7 @@
 
 <body>
     <div id="app" style="align-items: center; display: flex; justify-content: center; margin-top: 10%;">
-        <color-picker v-bind="color" @input="onInput"></color-picker>
+        <color-picker v-bind="color" @input="onInput" @change="onChange"></color-picker>
     </div>
 
     <script>
@@ -36,7 +36,10 @@
             methods: {
                 onInput: function (hue) {
                     this.color.hue = hue;
-                    const [r, g, b] = toRgb(hue, this.color.saturation, this.color.luminosity);
+                },
+                onChange: function (hue) {
+                    this.color.hue = hue;
+                    const [r, g, b] = toRgb(this.color.hue, this.color.saturation, this.color.luminosity);
 
                     const data = JSON.stringify({
                         r, g, b,
