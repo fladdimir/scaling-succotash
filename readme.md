@@ -2,13 +2,14 @@
 
 minimal sample application for backend framework test
 
-[color-picker-frontend](./vue-it/index.html) & postgres db
+[color-picker-frontend](./vue-it/index.html) & [postgres-db](./docker-compose.yml)
 
 - springboot (spring data repositories)
 - micronaut (+graalvm native image)
 - go: gin + gorm
+- asp.net core + ef-core
 
 TODOs:
 
-- asp .net core & entity framework core
 - scala play ?
+- koa js / ts ?
