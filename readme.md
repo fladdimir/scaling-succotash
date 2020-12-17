@@ -12,10 +12,7 @@ backends:
 - c#: asp.net core + ef-core
 - typescript: koa + typeorm
 
-additional frontend stuff:
+frontends:
 
 - electron
-
-TODO:
-
 - flutter
