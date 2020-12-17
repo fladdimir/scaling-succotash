@@ -1,15 +1,21 @@
 # scaling-succotash
 
-minimal sample application for backend framework test
+minimal sample application for web-framework test
 
 [color-picker-frontend](./vue-it/index.html) & [postgres-db](./docker-compose.yml)
 
-- springboot (spring data repositories)
-- micronaut (+graalvm native image)
+backends:
+
+- java: springboot + spring data repositories
+- java: micronaut + graalvm native image
 - go: gin + gorm
-- asp.net core + ef-core
+- c#: asp.net core + ef-core
+- typescript: koa + typeorm
 
-TODOs:
+additional frontend stuff:
 
-- scala play ?
-- koa js / ts ?
+- electron
+
+TODO:
+
+- flutter

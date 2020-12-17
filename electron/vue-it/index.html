@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <script src="vue.js"></script>
+    <script src="color-picker.js"></script>
+    <link href="color-picker.css" rel="stylesheet">
+    <script src="color-conversion.js"></script>
+    <script>
+        const COLOR_URL = "http://localhost:8080/rgbColors/1";
+        const MAX_COLOR_VALUE = 255;
+    </script>
+</head>
+
+<body>
+    <div id="app" style="align-items: center; display: flex; justify-content: center; margin-top: 10%;">
+        <color-picker v-bind="color" @input="onInput" @change="onChange"></color-picker>
+    </div>
+
+    <script>
+        var ColorPicker = window.VueColorPicker;
+        var app = new Vue({
+            el: '#app',
+            components: {
+                ColorPicker: ColorPicker
+            },
+            data: {
+                color: {
+                    hue: 50,
+                    saturation: 100,
+                    luminosity: 60,
+                    alpha: 1
+                }
+            },
+            methods: {
+                onInput: function (hue) {
+                    this.color.hue = hue;
+                },
+                onChange: function (hue) {
+                    this.color.hue = hue;
+                    const [r, g, b] = toRgb(this.color.hue, this.color.saturation, this.color.luminosity);
+
+                    const data = JSON.stringify({
+                        r, g, b,
+                        max: MAX_COLOR_VALUE
+                    });
+                    console.log(data);
+                    const xhr = new XMLHttpRequest();
+                    xhr.open("PUT", COLOR_URL, true);
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+                    xhr.send(data);
+                },
+            },
+            created: function () {
+                // fetch from db
+                console.log("fetching current value from db...")
+                fetch(COLOR_URL)
+                    .then(response => response.json())
+                    .then(rgbColor => {
+                        console.log(`fetched from db:\n${JSON.stringify(rgbColor, null, 2)}`)
+                        var rgb = [rgbColor.r, rgbColor.g, rgbColor.b];
+                        rgb = rgb.map(colorValue => colorValue / rgbColor.max * MAX_COLOR_VALUE);
+                        console.log(`scaled rgb: ${rgb}`)
+                        const [h, s, l] = toHsl(...rgb);
+                        this.color.hue = h;
+                        this.color.saturation = s;
+                        this.color.luminosity = l;
+                    });
+            }
+        });
+    </script>
+</body>
+
+</html>
